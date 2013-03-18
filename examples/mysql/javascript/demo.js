@@ -102,11 +102,14 @@ EditableGrid.prototype.initializeGrid = function()
 			// this action will remove the row, so first find the ID of the row containing this cell 
 			var rowId = editableGrid.getRowId(cell.rowIndex);
 			
-			cell.innerHTML = "<a onclick=\"if (confirm('Are you sure you want to delete this person ? ')) { editableGrid.remove(" + cell.rowIndex + "); editableGrid.renderCharts(); } \" style=\"cursor:pointer\">" +
+			cell.innerHTML = "<a onclick=\"if (confirm('Are you sure you want to delete this person ? ')) { editableGrid.deleteRow(" + cell.rowIndex + "); editableGrid.renderCharts(); editableGrid.remove(" + cell.rowIndex + "); } \" style=\"cursor:pointer\">" +
 							 "<img src=\"" + image("delete.png") + "\" border=\"0\" alt=\"delete\" title=\"Delete row\"/></a>";
 			
-			cell.innerHTML+= " <a onclick=\"editableGrid.duplicate(" + cell.rowIndex + ");\" style=\"cursor:pointer\">" +
+			cell.innerHTML+= " <a onclick=\"editableGrid.duplicateRow(" + cell.rowIndex + ");\" style=\"cursor:pointer\">" +
 			 "<img src=\"" + image("duplicate.png") + "\" border=\"0\" alt=\"duplicate\" title=\"Duplicate row\"/></a>";
+			
+			cell.innerHTML+= " <a onclick=\"editableGrid.addRow("+cell.rowIndex+");\" style=\"cursor:pointer\">" +
+			 "<img src=\"" + image("add.png") + "\" border=\"0\" alt=\"Click To Add New Row\" title=\"Add New Row\"/></a>";
 			
 		}})); 
 		
@@ -239,13 +242,13 @@ EditableGrid.prototype.updatePaginator = function()
 	});
 		
 	// "first" link
-	var link = $("<a>").html("<img src='../../full/javascript/" + image("gofirst.png") + "'/> ");
+	var link = $("<a>").html('<img src="images/gofirst.png" />');
 	if (!this.canGoBack()) link.css({ opacity : 0.4, filter: "alpha(opacity=40)" });
 	else link.css("cursor", "pointer").click(function(event) { editableGrid.firstPage(); });
 	paginator.append(link);
 
 	// "prev" link
-	link = $("<a>").html("<img src='../../full/javascript/" + image("prev.png") + "'/> ");
+	link = $("<a>").html('<img src="images/prev.png" />');
 	if (!this.canGoBack()) link.css({ opacity : 0.4, filter: "alpha(opacity=40)" });
 	else link.css("cursor", "pointer").click(function(event) { editableGrid.prevPage(); });
 	paginator.append(link);
@@ -254,17 +257,31 @@ EditableGrid.prototype.updatePaginator = function()
 	for (p = 0; p < pages.length; p++) paginator.append(pages[p]).append(" | ");
 	
 	// "next" link
-	link = $("<a>").html("<img src='../../full/javascript/" + image("next.png") + "'/> ");
+	link = $("<a>").html('<img src="images/next.png" />');
 	if (!this.canGoForward()) link.css({ opacity : 0.4, filter: "alpha(opacity=40)" });
 	else link.css("cursor", "pointer").click(function(event) { editableGrid.nextPage(); });
 	paginator.append(link);
 
 	// "last" link
-	link = $("<a>").html("<img src='../../full/javascript/" + image("golast.png") + "'/> ");
+	link = $("<a>").html('<img src="images/golast.png" />');
 	if (!this.canGoForward()) link.css({ opacity : 0.4, filter: "alpha(opacity=40)" });
 	else link.css("cursor", "pointer").click(function(event) { editableGrid.lastPage(); });
 	paginator.append(link);
 };
+function highlightRow(rowId, bgColor, after)
+{
+	var rowSelector = $("#" + rowId);
+	rowSelector.css("background-color", bgColor);
+	rowSelector.fadeTo("normal", 0.5, function() { 
+		rowSelector.fadeTo("fast", 1, function() { 
+			rowSelector.css("background-color", '');
+		});
+	});
+}
+
+function highlight(div_id, style) {
+	highlightRow(div_id, style == "error" ? "#e5afaf" : style == "warning" ? "#ffcc00" : "#8dc70a");
+}
 EditableGrid.prototype.modelChanged = function(rowIndex, columnIndex, oldValue, newValue, row, onResponse)
 {      
 	$.ajax({
@@ -293,19 +310,87 @@ EditableGrid.prototype.modelChanged = function(rowIndex, columnIndex, oldValue, 
 		error: function(XMLHttpRequest, textStatus, exception) { alert("Ajax failure\n" + errortext); },
 		async: true
 	});
-   
-}
-function highlightRow(rowId, bgColor, after)
-{
-	var rowSelector = $("#" + rowId);
-	rowSelector.css("background-color", bgColor);
-	rowSelector.fadeTo("normal", 0.5, function() { 
-		rowSelector.fadeTo("fast", 1, function() { 
-			rowSelector.css("background-color", '');
-		});
+}   
+EditableGrid.prototype.deleteRow = function (rowIndex){ 
+	$.ajax({
+		url: 'datasource/delete.php',
+		type: 'POST',
+		dataType: "text",
+		data: {
+			tablename : editableGrid.name,
+			id: editableGrid.getRowId(rowIndex)
+		},
+		success: function(response){
+			displayMessage("Row Has Been Deleted")
+		}
 	});
 }
+EditableGrid.prototype.duplicateRow = function(rowIndex) 
+{
+	var values = this.getRowValues(rowIndex); var nm = values['name']; var fn = values['firstname'];
+	values['name'] = values['name'] + ' (copy)'; //values['id'] = newRowId;
 
-function highlight(div_id, style) {
-	highlightRow(div_id, style == "error" ? "#e5afaf" : style == "warning" ? "#ffcc00" : "#8dc70a");
+	var names = []; var types = []; var vals = []; var valArr = []; valArr = callArrValues(values);
+	var len = Object.keys(values).length;
+	for(i=0;i<len;i++){
+		var cn = editableGrid.getColumnName(i); var ct = editableGrid.getColumnType(i);
+		if(cn != "id" && cn != "action"){
+			names.push(cn); types.push(ct);
+			switch(ct){
+				case "integer": vals.push(valArr[i]); break;
+				case "boolean": vals.push(valArr[i]?1:0); break;
+				case "date": var dt = valArr[i]; var dtArr = dt.split("/"); 
+					vals.push("STR_TO_DATE('" + dtArr[1] + '/' + dtArr[0] + '/' + dtArr[2] + "','%m/%d/%Y')"); break;
+				default: vals.push("'"+valArr[i]+"'"); break;
+			}
+		}
+	}
+	$.ajax({
+		url: 'datasource/insert.php',
+		type: 'POST',
+		dataType: "text",
+		data: {
+			tablename : editableGrid.name,
+			columnlist: names,
+			valuelist: vals	
+		},
+		success: function(response){
+			values['id'] = response,
+			editableGrid.insertAfter(rowIndex, response, values, '', true),
+			displayMessage("Row Has Been added \(" + callArrValues(values) + ")")
+		},
+		error: function(error){ alert("Ajax Failure: "+error); }
+	});
+};
+EditableGrid.prototype.addRow = function(rowIndex){
+	var rowValues = this.getRowValues(0); 
+	var colnames = []; var ev = [];
+	var len = Object.keys(rowValues).length;
+	for(i=0;i<len;i++){ 
+		var cln = editableGrid.getColumnName(i); 
+		if(cln != "id" && cln != "action"){ 
+			colnames.push(cln); 
+			switch(cln){
+				case "name": ev.push("'Enter Last Name'"); rowValues['name'] = "Enter Last Name"; break;
+				case "firstname": ev.push("'Enter First Name'"); rowValues['firstname'] = "Enter First Name"; break;
+				default: ev.push("NULL"); rowValues[cln] = ''; break;
+			}
+		}
+	}
+	$.ajax({
+		url: 'datasource/insert.php',
+		type: 'POST',
+		dataType: "text",
+		data: {
+			tablename : editableGrid.name,
+			columnlist: colnames,
+			valuelist: ev	
+		},
+		success: function(response){
+			rowValues['id'] = response,
+			editableGrid.insertAfter(rowIndex, response, rowValues, '', true),
+			displayMessage("Row Has Been added")
+		},
+		error: function(error){ alert("Ajax Failure: "+error); }
+	});
 }

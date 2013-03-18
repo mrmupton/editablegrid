@@ -11,7 +11,7 @@
  * http://editablegrid.net/license
  */
       
-require_once('config.php');         
+require_once('datasource/config.php');         
 
 // Database connection                                   
 $mysqli = mysqli_init();
@@ -19,11 +19,9 @@ $mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
 $mysqli->real_connect($config['db_host'],$config['db_user'],$config['db_password'],$config['db_name']); 
                       
 // Get all parameters provided by the javascript
-$colname = $mysqli->real_escape_string(strip_tags($_POST['colname']));
-$id = $mysqli->real_escape_string(strip_tags($_POST['id']));
-$coltype = $mysqli->real_escape_string(strip_tags($_POST['coltype']));
-$value = $mysqli->real_escape_string(strip_tags($_POST['newvalue']));
-$tablename = $mysqli->real_escape_string(strip_tags($_POST['tablename']));
+$tableval = $mysqli->real_escape_string(strip_tags($_POST['tablename']));
+$cols = $mysqli->real_escape_string(strip_tags($_POST['columnlist']));
+$vals = $mysqli->real_escape_string(strip_tags($_POST['valuelist']));
                                                 
 // Here, this is a little tips to manage date format before update the table
 if ($coltype == 'date') {
@@ -37,12 +35,14 @@ if ($coltype == 'date') {
 
 // This very generic. So this script can be used to update several tables.
 $return=false;
-if ( $stmt = $mysqli->prepare("UPDATE ".$tablename." SET ".$colname." = ? WHERE id = ?")) {
-	$stmt->bind_param("si",$value, $id);
+if ( $stmt = $mysqli->prepare("INSERT INTO ".$tableval." (".implode($cols,",").") VALUES (".implode($vals,",").")")) {
 	$return = $stmt->execute();
 	$stmt->close();
-	
-}             
+	$stm = $mysqli->prepare("SELECT MAX(id) AS ID FROM ".$tableval);
+	$stm->execute();
+	$mxid = $stm->fetch_object->ID;
+	$stm->close();
+}    
 $mysqli->close();        
 
-echo $return ? "ok" : "error";
+echo $return ? $mxid : "error";

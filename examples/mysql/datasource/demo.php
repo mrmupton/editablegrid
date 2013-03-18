@@ -69,7 +69,7 @@ $grid->addColumn('website', 'Website', 'string');
 // action column ("html" type), not editable
 $grid->addColumn("action", "", "html", NULL, false);
                                                                        
-$result = $mysqli->query('SELECT *, date_format(lastvisit, "%d/%m/%Y") as lastvisit FROM demo LIMIT 100');
+$result = $mysqli->query('SELECT *, date_format(lastvisit, "%d/%m/%Y") as lastvisit FROM demo');
 $mysqli->close();
 
 // send data to the browser
