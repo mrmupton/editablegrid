@@ -282,6 +282,8 @@ function highlightRow(rowId, bgColor, after)
 function highlight(div_id, style) {
 	highlightRow(div_id, style == "error" ? "#e5afaf" : style == "warning" ? "#ffcc00" : "#8dc70a");
 }
+function callArr(obj) { var keys = []; for (var key in obj) { keys.push("'[" + key + "]'"); }	return keys; }
+function callArrValues(o){ var vals = []; for (var k in o){	vals.push(o[k]); } return vals; }
 EditableGrid.prototype.modelChanged = function(rowIndex, columnIndex, oldValue, newValue, row, onResponse)
 {      
 	$.ajax({
