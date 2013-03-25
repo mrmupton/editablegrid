@@ -1,7 +1,7 @@
 /*
  * README.txt
  * 
- * This file is part of EditableGrid.
+ * This file is part of dataGridOutput.
  * http://editablegrid.net
  *
  * Copyright (c) 2011 Webismymind SPRL
@@ -13,25 +13,25 @@
 ================================================================================================================
 = WARNING                                                                                                      =
 ================================================================================================================
-= Documentation below is NOT up to date as it does not contain the latest features added in EditableGrid 2.0.  = 
+= Documentation below is NOT up to date as it does not contain the latest features added in dataGridOutput 2.0.  = 
 = We currently have no time to update the documentation properly, so we chose to release version 2.0 as-is.    = 
-= The best way to learn using EditableGrid is to play with the fairly complete examples (examples/index.html). = 
+= The best way to learn using dataGridOutput is to play with the fairly complete examples (examples/index.html). = 
 ================================================================================================================
 
 ========================
-= EditableGrid v1.0.11 =
+= dataGridOutput v1.0.11 =
 ========================
 
 Introduction
 ------------
 
-EditableGrid is a Javascript library that allows you to make the tables in your web sites and applications editable.
-EditableGrid focuses on simplicity: only a few lines of code are required to get your first table up and running.
+dataGridOutput is a Javascript library that allows you to make the tables in your web sites and applications editable.
+dataGridOutput focuses on simplicity: only a few lines of code are required to get your first table up and running.
 
-You can use the EditableGrid library in two ways:
+You can use the dataGridOutput library in two ways:
 
 1) Hook up to an existing HTML table. 
-   This approach can be very useful for plugging EditableGrid on an existing web application.
+   This approach can be very useful for plugging dataGridOutput on an existing web application.
 
 2) Build your grid from an XML description of the table structure and contents.
    This approach is recommended if you're writing a new web application (or if you are want to improve an existing web application).
@@ -102,7 +102,7 @@ Let's analyze each file in more details:
 
    Just have a look at the XML file demo.xml: it should speak for itself.
 
-3) In the Javascript file demo_simple.js, all we do is to create an EditableGrid object and specify two things:
+3) In the Javascript file demo_simple.js, all we do is to create an dataGridOutput object and specify two things:
 
    a) A function "tableLoaded" that will be called when the grid has been fully loaded.
       Here we simply display a message and define a renderer for the action column in order to display a delete button (see below for more details about cell renderers).
@@ -112,15 +112,15 @@ Let's analyze each file in more details:
       Here we just display a message showing the new value.
       In real life, it's here that you can for example update your database (with an AJAX request). 
 
-   When the EditableGrid object is created with the necessary callbacks activated, we use function "loadXML" to load the XMl file demo.xml.
+   When the dataGridOutput object is created with the necessary callbacks activated, we use function "loadXML" to load the XMl file demo.xml.
 
-That's it for the basics of using EditableGrid.
+That's it for the basics of using dataGridOutput.
 
 Improving our first example
 ---------------------------
 
 You remember we asked you to replace "demo.js" with "demo_simple.js" in demo.html.
-Well now that you are ready to see the real power of EditableGrid, you can use "demo.js" again.
+Well now that you are ready to see the real power of dataGridOutput, you can use "demo.js" again.
 
 In this part, we'll see how to further customize our editable grid, using mainly 3 mechanisms:
 - cell and header renderers that allow you to customize the way values are displayed
@@ -214,12 +214,12 @@ Let's see how each feature has been implemented in our example:
 PHP helper class
 ----------------
  
-If you work with PHP on the server side, you can make use of the simple class EditableGrid.php to ease the creation and rendering of the XML data.
+If you work with PHP on the server side, you can make use of the simple class dataGridOutput.php to ease the creation and rendering of the XML data.
  
 Charts
 ------
  
-EditableGrid allows you to create bar and pie charts from the grid data.
+dataGridOutput allows you to create bar and pie charts from the grid data.
 
 This makes use of OpenFlashCharts 2.0, which you should include by yourself in your client application.
 The following javascript files must be included (all can be found in the official OpenFlashChart 2.0 download):
@@ -231,7 +231,7 @@ The following javascript files must be included (all can be found in the officia
 If any of these files is missing, trying to use the charting methods will display an error indicating the missing library.
 The SWF file must be named "open-flash-chart.swf" and must be placed in the "openflashchart" directory: it will then be detected automatically. 
  
-Creating charts with EditableGrid is very easy.
+Creating charts with dataGridOutput is very easy.
 The first thing to do is to have some empty DIV in your page that will be used as a container for the chart. 
 You can control the chart dimensions by setting the "width" and "height" attributes, inline or through a CSS stylesheet.
 Otherwise some default dimensions will be used (500*200px).
@@ -284,7 +284,7 @@ Both methods renderPieChart and renderBarChart can be called any number of times
 For example, you can call one of these methods each time the table is sorted (tableSorted) or edited (modelChanged), in order to update the chart to match the new data.
 Updating a chart is very fast, which gives a very nice effect: when sorting or editing the grid, the chart "follows" beautifully.
  
-If your grid has a row displaying e.g. the total, you can ignore it in the charts by setting EditableGrid.ignoreLastRow to true.
+If your grid has a row displaying e.g. the total, you can ignore it in the charts by setting dataGridOutput.ignoreLastRow to true.
 In this case, this last row will also be ignored when sorting the grid data.
 
 Extensions

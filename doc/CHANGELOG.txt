@@ -1,7 +1,7 @@
 /*
  * CHANGELOG.txt
  * 
- * This file is part of EditableGrid.
+ * This file is part of dataGridOutput.
  * http://editablegrid.net
  *
  * Copyright (c) 2011 Webismymind SPRL
@@ -9,7 +9,7 @@
  * http://editablegrid.net/license
  */
 
-[21/10/2009] EditableGrid v1.0.0
+[21/10/2009] dataGridOutput v1.0.0
 ================================
 
 First stable public release, including the following main features:
@@ -23,22 +23,22 @@ First stable public release, including the following main features:
 
 This release has been successfully tested on: Firefox 3.0 and 3.5, Internet Explorer 7 and 8, Safari 4, Google Chrome
 
-[23/10/2009] EditableGrid v1.0.1
+[23/10/2009] dataGridOutput v1.0.1
 ================================
 
 Changed the XML loading method on Firefox: we use XMLHttpRequest which seems more reliable than document.implementation.
 
-[02/11/2009] EditableGrid v1.0.2
+[02/11/2009] dataGridOutput v1.0.2
 ================================
 
 Several editable grids can now safely be put on the same page:
-- you have to give a name when creating the EditableGrid instance (this name is used to prefix the row ids in the DOM in order to keep them unique)
+- you have to give a name when creating the dataGridOutput instance (this name is used to prefix the row ids in the DOM in order to keep them unique)
 - to retrieve the row id in database (ie. the row id you gave in your XML or HTML grid definition) you have to use the new method "getRowId"
 
 Bugfixes: 
 - if you edited a cell then went to another tab in Firefox, the previous value was put back into the cell.
 
-[05/11/2009] EditableGrid v1.0.3
+[05/11/2009] dataGridOutput v1.0.3
 ================================
 
 The loadXML method now loads custom attributes that may have been set on the rows in the XML.
@@ -48,7 +48,7 @@ Bugfixes:
 - fixed the removeRow method that had been broken in version 1.0.2
 - it is now possible to call loadXML several times: the table contents will be replaced when calling renderGrid
 
-[22/12/2009] EditableGrid v1.0.4
+[22/12/2009] dataGridOutput v1.0.4
 ================================
 
 1) The values stored in the model are converted according to the column type (boolean, integer and double).
@@ -71,7 +71,7 @@ Bugfixes:
    Also, if you inherit from CheckboxCellRenderer, your render function will now be called each time the checbox is (un)checked.
 
 4) Improved attaching to an existing HTML table:
-   - added a flag Column.renderable that can be used to prevent EditableGrid to call the render function for this column
+   - added a flag Column.renderable that can be used to prevent dataGridOutput to call the render function for this column
    - the row passed to modelChanged was incorrect if the TBODY contained other child nodes than TR
    - fixed the example so that the action column is not editable
 
@@ -82,21 +82,21 @@ Bugfixes:
    - an error message is displayed if the XML cannot be loaded
    - fixed error occuring when an editable grid was itself in a table
    
-[12/01/2010] EditableGrid v1.0.5
+[12/01/2010] dataGridOutput v1.0.5
 ================================
  
 - Replacing HTML special characters is not done when generating the XML, but before calling the cell renderers
 - Removed annoying effect when sorting: images used to indicate the sorting order are preloaded + only impacted colum headers are refreshed
 
-[05/02/2010] EditableGrid v1.0.6
+[05/02/2010] dataGridOutput v1.0.6
 ================================
 
 - Error message "Could not load XML" is not displayed anymore because it can happen normally when leaving a page too quickly
 - We use htmlspecialchars instead of htmlentities for rendering string cells, it's sufficient
 - Fixed display of "&quot;" on Google Chrome
-- Custom XML attributes can be encoded in base64 by EditableGrid.php
+- Custom XML attributes can be encoded in base64 by dataGridOutput.php
 
-[01/04/2010] EditableGrid v1.0.7
+[01/04/2010] dataGridOutput v1.0.7
 ================================
 
 Bugfixes:
@@ -127,10 +127,10 @@ Advanced:
 - the checkDate function also give a MySQL ready date yyyy-mm-dd ('dbDate' attribute)
 - you can now easily specify custom attributes in the constructor of CellRenderer, CellEditor and EnumProvider, eg. new CellRenderer { myAttribute: ..., render: ... }
 
-[26/07/2010] EditableGrid v1.0.8
+[26/07/2010] dataGridOutput v1.0.8
 ================================
 
-1) EditableGrid now allows you to create bar and pie charts from the grid data.
+1) dataGridOutput now allows you to create bar and pie charts from the grid data.
    This makes use of OpenFlashCharts 2.0, which should thus be included in your client application.
    See README.txt for details on how to setup, create and use charts.
 
@@ -168,11 +168,11 @@ Advanced:
    - added method getXML (called internally by renderXML)
 
 7) API
-   - you can now pass your own attributes in the EditableGrid constructor
+   - you can now pass your own attributes in the dataGridOutput constructor
    - added a configuration option "saveOnBlur", true by default (this option is relevant only if allowSimultaneousEdition is false)
    - added method sort() without parameters, that can be used e.g. to re-sort the grid after some cell has been edited (i.e. in modelChanged)
-   - added method column.isNumerical() and EditableGrid.isColumnNumerical(columnIndexOrName)
-   - added method EditableGrid.setCaption (this caption is used to render the table's caption in renderGrid when XML is used)
+   - added method column.isNumerical() and dataGridOutput.isColumnNumerical(columnIndexOrName)
+   - added method dataGridOutput.setCaption (this caption is used to render the table's caption in renderGrid when XML is used)
    - added a callback "tableSorted()" called immeditately after the table has been sorted (e.g. to update a bar or pie chart)
    - added a callback "readonlyWarning(column)" called when a cell of a non editable column has been clicked
    - added a callback "isHeaderEditable(rowIndex, columnIndex)" in order to avoid always testing rowIndex in "isEditable"
@@ -183,21 +183,21 @@ Advanced:
    - method setValueAt returns the previous value
    - TextCellEditor accepts a configuration object
    
-[01/08/2010] EditableGrid v1.0.9
+[01/08/2010] dataGridOutput v1.0.9
 ================================
 
 Bugfixes:
 - the PHP wrapper replaces all special XML characters in column labels by the corresponding XML code (&, ', ", <, >)
 - getColumnIndex first checks if the given argument is a valid column index (ie. if the argument is at the same time a valid index and a valid name, index has priority)
 
-[07/09/2010] EditableGrid v1.0.10 - [Released under the GNU GPL license]
+[07/09/2010] dataGridOutput v1.0.10 - [Released under the GNU GPL license]
 =================================
 
 API:
 - added optional parameters "bgColor", "alpha" and "gradientFill" to renderPieChart (defaults are: white / 0.5 / true)
 - added optional parameters "bgColor" and "alpha" renderBarChart (defaults are: white / 0.9)
 - added callback functions "tableRendered" and "chartRendered" called after a table or chart has been rendered
-- callback functions can now also be set globally by updating EditableGrid.prototype
+- callback functions can now also be set globally by updating dataGridOutput.prototype
 
 PHP wrapper:
 - get/renderXML is now able to handle any source of data: array, DB result set, Zend paginator (the row itself can be an array or an object)
@@ -208,7 +208,7 @@ Bugfixes:
 - always apply the "number" class to numerical cells, but also to column headers
 - takes "colspan" attributes on column headers into account when using attachToTable (this way the header will be rendered using the correct column type).
 
-[17/02/2011] EditableGrid v1.0.11
+[17/02/2011] dataGridOutput v1.0.11
 =================================
 
 1) A new directory "extensions" has been created.
@@ -227,12 +227,12 @@ Bugfixes:
    - added rowSelected callback
    - some fixes in jsdoc comments
    
-[24/04/2012] EditableGrid v2.0.0 - [Released under both the MIT and GNU GPL licenses]
+[24/04/2012] dataGridOutput v2.0.0 - [Released under both the MIT and GNU GPL licenses]
 ================================
 
 WARNING:
- EditableGrid currently suffers from a lack of documentation.
- Please check the examples (examples/index.html) to learn how to use EditableGrid.
+ dataGridOutput currently suffers from a lack of documentation.
+ Please check the examples (examples/index.html) to learn how to use dataGridOutput.
 
 MAIN NEW FEATURES:
 * Full client-side pagination
@@ -252,7 +252,7 @@ NEW CHART FEATURES:
 * Added an optional "limit" parameter to renderBarChart, renderStackedBarChart and renderPieChart: if set, this is the maximum number of rows taken into account for drawing the chart
 
 MISC.:
-* To avoid any issue with javascript not able to parse XML, ensure data is valid for encoding in EditableGrid.php wrapper (using iconv)
+* To avoid any issue with javascript not able to parse XML, ensure data is valid for encoding in dataGridOutput.php wrapper (using iconv)
 * Callback tableRendered is called also when the table is refreshed (after sorting, filtering or changing the current page)
 * Function sort() is called by renderGrid only if there is a currently defined sorting order (to avoid a double render) but the expected callback tableSorted is still called
 * Added column attributes: decimal_point, thousands_separator, unit_before_number.

@@ -1,7 +1,7 @@
 /*
  * HOWTO.txt
  * 
- * This file is part of EditableGrid.
+ * This file is part of dataGridOutput.
  * http://editablegrid.net
  *
  * Copyright (c) 2011 Webismymind SPRL
